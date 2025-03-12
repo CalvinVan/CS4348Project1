@@ -154,7 +154,5 @@ Encryption
  c. DECRYPT
  d. QUIT
 
-
-
-
-
+## March 12 3:30 PM
+Work on logger.
