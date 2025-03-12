@@ -121,6 +121,40 @@ Example:
 > System->encryption: "quit"
 > System: Break out of loop and end program.
 
+Forgot to put this in here but also begin making the starting program files that will be needed for the project.
+
+## March 12 11:00AM
+Watched a video on using the subprocess library in python.
+
+Begin working on driver.py 
+Set up processes and argument fetching from the command line using sys
+
+Setup TO-DO-LIST for all files
+
+Driver:
+1. Setup getting logger file (DONE)
+2. Setup running the 2 processes (DONE)
+3. Setup UI 
+4. Setup Functions and the proper communication with the 2 processes
+  a. Password
+  b. Encrypt
+  c. Decrypt
+  d. History
+  e. Quit
+
+Logger:
+1. Setup Initial Start Log
+2. Setup timing in log
+3. Setup writing messages in the log
+
+Encryption
+1. Setup functions and their outputs
+ a. PASSKEY
+ b. ENCRYPT
+ c. DECRYPT
+ d. QUIT
+
+
 
 
 
