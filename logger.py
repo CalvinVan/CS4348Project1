@@ -16,27 +16,24 @@ def main():
 
   logFile = sys.argv[1]
   
-
-
   with open(logFile, 'a') as f: #Open up the log file as append since we could be using a file that was previously written in
     writeMessage("START", "Logging Started.", f) #write start of logging into logger
 
-
-    while True: #we will receive input and write to the log as long as the program has not quitted
-      logMessage = input().strip().lower()  #get the message from standard input 
+    while True:
+      logMessage = input().strip()  #get the message from standard input 
 
       #handle Quit Input
-      if logMessage == "quit":
+      if logMessage.lower() == "quit":
         writeMessage("QUIT", "Program Quitted.", f)
-        break #break out of the loop to end the program
-
+        return #break out of the loop to end the program
+      else:
       #handle every other action / input
       #messages are broken into 2 parts [ACTION] [MESSAGE]
-      
-      parseArr = logMessage.split(maxsplit=1) #here we can have message be its own entry with any number of spaces / split into 2 parts
-      action = parseArr[0].upper()
-      message = parseArr[1] #maybe there is possible logic to put here if an action does not result in a message
-      writeMessage(action, message, f)
+        parseArr = logMessage.split(maxsplit=1) #here we can have message be its own entry with any number of spaces / split into 2 parts
+        action = parseArr[0]
+        if len(parseArr) == 2:
+          message = parseArr[1] #maybe there is possible logic to put here if an action does not result in a message
+        writeMessage(action, message, f)
     
 
 if __name__ == "__main__":

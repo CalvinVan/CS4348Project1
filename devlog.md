@@ -148,11 +148,11 @@ Logger: DONE?
 3. Setup writing messages in the log DONE
 
 Encryption
-1. Setup functions and their outputs
- a. PASSKEY
- b. ENCRYPT
+1. Setup functions and their outputs Done
+ a. PASSKEY Done
+ b. ENCRYPT 
  c. DECRYPT
- d. QUIT
+ d. QUIT Done
 
 ## March 12 3:30 PM
 Work on logger.
@@ -162,3 +162,17 @@ Finished up setting up the functions without implementing the encryption backend
 ## March 12 8:00 PM
 Start working on encryption program
 An error that I came across was not having an endline when writing into the encryption program could lead to it being stuck since I had it read in a line.
+
+
+## March 13 10:40AM
+Begin working on encryption and driver program again to implement the rest of the features.
+
+## March 13 1:10PM
+I have finished the project with error handling. The things that I finished up were integration of the 
+encryption program with the driver. This includes troubleshooting any problems with encryption communicating with the driver and implementing the vigenere algorithm.
+
+Something that I changed regarding the driver was including more logger calls to record errors, fixed some errors such as index being set to *= -index instead of index, better UI formatting, and more responsive logging. I also implemented the integration of the encryption calls for decrypt and encrypt. Furthermore, I changed the default case of inputted strings from lowercase to uppercase for the algorithm to function properly. 
+
+ As for the logger, I changed input being automatically lowercased. 
+ 
+ Also worked on the readme

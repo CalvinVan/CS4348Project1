@@ -10,43 +10,50 @@ def password(loggerProcess, encryptionProcess, history):
       print("Select: ", end="")
       userInput = input().strip().lower()
       if userInput == "cancel":
-         loggerProcess.stdin.write("CANCEL User cancelled action")
+         loggerProcess.stdin.write("CANCEL User cancelled action\n")
          loggerProcess.stdin.flush()
          return
       elif (userInput != "h" and userInput != "n"):
+         loggerProcess.stdin.write("ERROR User gave invalid input\n")     
+         loggerProcess.stdin.flush()
          print("Invalid Input")
       else:
          break
 
    while True:
       if userInput == "h":
+         loggerProcess.stdin.write("SELECT_HISTORY_PASSWORD User chose to use a word from history to set as password\n")     
+         loggerProcess.stdin.flush()
          if len(history) == 0:
             print("There are no words in history to select from")
             while True:
                print("Would you like to enter a new string? Enter (yes or no)")
+               print("Input Yes/No: ", end="")
                userInput = input().strip().lower()
                if userInput == "yes":
                   userInput = "n"
                   break
                elif userInput == "no":
-                  loggerProcess.stdin.write("PASSWORD_EXIT User exit out of entering a password\n")
+                  loggerProcess.stdin.write("PASSWORD_EXIT User exit out of history for entering a password\n")
                   loggerProcess.stdin.flush()
                   return #break out of function
                else:
+                  loggerProcess.stdin.write("ERROR User gave invalid input\n")     
+                  loggerProcess.stdin.flush()
                   print("Invalid input")
          else:
             displayHistory(history)
             print("Enter the number for the word you would like to set as password (If you would like to enter a new line, enter n): ")
+            print("Input Number: ", end="")
             passwordNum = input().strip().lower()
-
             if passwordNum.isdigit():
                index = int(passwordNum)
                if 1 <= index <= len(history):
                   index = -index
                   word = history[index]
-                  loggerProcess.stdin.write("HISTORY_PASSWORD User chose to use word in history to set as password\n")     
-                  loggerProcess.stdin.flush()
                   
+                  loggerProcess.stdin.write(f"SET_HISTORY_PASSWORD User chose to use {word} in history to set as password\n")     
+                  loggerProcess.stdin.flush()
                   encryptionProcess.stdin.write(f"PASSKEY {word}\n")
                   encryptionProcess.stdin.flush()
                   
@@ -56,7 +63,7 @@ def password(loggerProcess, encryptionProcess, history):
                   print(output)
 
                   #write the output to logger
-                  loggerProcess.stdin.write(output)
+                  loggerProcess.stdin.write(f"{output}\n")
                   loggerProcess.stdin.flush()
                   return       
                   
@@ -68,32 +75,30 @@ def password(loggerProcess, encryptionProcess, history):
 
             else:
                if userInput != "n":
+                  loggerProcess.stdin.write("ERROR User gave invalid input\n")     
+                  loggerProcess.stdin.flush()
                   print("Invalid Input")
                   userInput ="h"
-               else:
-                  userInput = "n"
             
-
       if userInput == "n":
-         while True:
-            print("Enter new string that you would like to set as a password:")
-            word = input().strip().lower()
-           
-            loggerProcess.stdin.write("NEW_PASSWORD User chose to enter a new word to set as password\n")
-            loggerProcess.stdin.flush() 
+         loggerProcess.stdin.write("SELECT_NEW_PASSWORD User chose to enter a new word to set as password\n")
+         loggerProcess.stdin.flush() 
+         print("Enter new string that you would like to set as a password")
+         print("Input Password: ", end="")
+         word = input().strip().upper()
 
-            encryptionProcess.stdin.write(f"PASSKEY {word}\n")
-            encryptionProcess.stdin.flush()
-            
-            
-            output = encryptionProcess.stdout.readline().strip()
-            
-            print(output)
+         loggerProcess.stdin.write(f"SET_NEW_PASSWORD User chose to set {word} as password\n")
+         loggerProcess.stdin.flush() 
+         
+         encryptionProcess.stdin.write(f"PASSKEY {word}\n")
+         encryptionProcess.stdin.flush()
+         
+         output = encryptionProcess.stdout.readline().strip()         
+         print(output)
 
-
-            loggerProcess.stdin.write(output)
-            loggerProcess.stdin.flush()
-            return
+         loggerProcess.stdin.write(f"{output}\n")
+         loggerProcess.stdin.flush()
+         return
     
             
 
@@ -117,66 +122,107 @@ def encrypt(loggerProcess, encryptionProcess, history):
       print("Select: ", end="")
       userInput = input().strip().lower()
       if userInput == "cancel":
-         loggerProcess.stdin.write("CANCEL User cancelled action")
+         loggerProcess.stdin.write("CANCEL User cancelled action\n")
          loggerProcess.stdin.flush()
          return
       elif (userInput != "h" and userInput != "n"):
+         loggerProcess.stdin.write("ERROR User gave invalid input\n")     
+         loggerProcess.stdin.flush()
          print("Invalid Input")
       else:
          break
    
    while True:
       if userInput == "h":
+         loggerProcess.stdin.write("SELECT_HISTORY_ENCRYPTION User chose to use a word from history to encrypt\n")     
+         loggerProcess.stdin.flush()
          if len(history) == 0:
             print("There are no words in history to select from")
             while True:
                print("Would you like to enter a new string? Enter (yes or no)")
+               print("Input Yes/No: ", end="")
                userInput = input().strip().lower()
                if userInput == "yes":
                   userInput = "n"
                   break
                elif userInput == "no":
-                  loggerProcess.stdin.write("ENCRYPT_EXIT User exit out of entering an encryption\n")
+                  loggerProcess.stdin.write("ENCRYPT_EXIT User exit out of history for entering an encryption\n")
                   loggerProcess.stdin.flush()
                   return
                else:
+                  loggerProcess.stdin.write("ERROR User gave invalid input\n")     
+                  loggerProcess.stdin.flush()
                   print("Invalid input")
          else:
             displayHistory(history)
             print("Enter a number for the word you would like to encrypt (If you would like to enter a new line, enter n): ")
+            print("Input Number: ", end="")
             encryptNum = input().strip().lower()
 
             if encryptNum.isdigit():
                index = int(encryptNum)
                if 1 <= index <= len(history):
-                  index *= -index
+                  index = -index
                   word = history[index]
-                  loggerProcess.stdin.write("HISTORY_ENCRYPT User chose to encrypt word in history\n")
+                  loggerProcess.stdin.write(f"HISTORY_ENCRYPT User chose to encrypt {word} in history\n")
                   loggerProcess.stdin.flush()
-                  #put encryption functions
-                  #store ouptut of encryption process
-                  # put logger output write
+
+                  encryptionProcess.stdin.write(f"ENCRYPT {word}\n")
+                  encryptionProcess.stdin.flush()
+
+                  output = encryptionProcess.stdout.readline().strip()
+                  print(output)
+                  parser = output.split()
+                  code = parser[0].upper()
+
+                  if code != "ERROR":
+                     history.append(word)
+                     history.append(parser[-1]) 
+
+                  loggerProcess.stdin.write(f"{output}\n")
+                  loggerProcess.stdin.flush()
                   return
+               
                else:
+                  loggerProcess.stdin.write("ERROR User chose a number out of range for history\n")     
+                  loggerProcess.stdin.flush()
                   print("Number not in range")
                   userInput = "h"
             else:
                if userInput != "n":
-                  print("Invalid  Input")
+                  loggerProcess.stdin.write("ERROR User gave invalid input\n")     
+                  loggerProcess.stdin.flush()
+                  print("Invalid Input")
                else:
                   userInput = "n"
       if userInput == "n":
-         print("Enter new string that you would like to encrypt:")
-         print("Select: ", end="")
-         word = input().strip().lower()
+         loggerProcess.stdin.write("SELECT_NEW_ENCRYPTION User chose to enter a new word to encrypt\n")
+         loggerProcess.stdin.flush() 
+         print("Enter new string that you would like to encrypt")
+         print("Input Encryption String: ", end="")
+         word = input().strip().upper()
         
-         history.append(word)
-         loggerProcess.stdin.write("NEW_ENCRYPTION User chose to enter new string to encrypt\n")
+         
+         loggerProcess.stdin.write(f"SEND_NEW_ENCRYPTION User chose to encrypt {word}\n")
          loggerProcess.stdin.flush()
 
-         encryptionProcess.stdin.write("ENCRYPT {}")
+         encryptionProcess.stdin.write(f"ENCRYPT {word}\n")
+         encryptionProcess.stdin.flush()
+         
 
-         #put appropriate functions
+         output = encryptionProcess.stdout.readline().strip()
+         print(output)
+         parser = output.split()
+         code = parser[0].upper()
+
+         
+         #need logic here to make sure only valid words and results are added to the history
+         if code != "ERROR":
+            history.append(word)
+            history.append(parser[1])
+
+         loggerProcess.stdin.write(f"{output}\n")
+         loggerProcess.stdin.flush()
          return
 
 
@@ -188,128 +234,177 @@ def decrypt(loggerProcess, encryptionProcess, history):
       print("Select: ", end="")
       userInput = input().strip().lower()
       if userInput == "cancel":
-         loggerProcess.stdin.write("CANCEL User cancelled action")
+         loggerProcess.stdin.write("CANCEL User cancelled decryption\n")
          loggerProcess.stdin.flush()
          return
       elif (userInput != "h" and userInput != "n"):
+         loggerProcess.stdin.write("ERROR User gave invalid input\n")     
+         loggerProcess.stdin.flush()
          print("Invalid Input")
       else:
          break
    
    while True:
       if userInput == "h":
+         loggerProcess.stdin.write("SELECT_HISTORY_DECRYPTION User chose to use a word from history to decrypt\n")     
+         loggerProcess.stdin.flush()
          if len(history) == 0:
             print("There are no words in history to select from")
             while True:
                print("Would you like to enter a new string? Enter (yes or no)")
+               print("Input Yes/No: ")
                userInput = input().strip().lower()
                if userInput == "yes":
                   userInput = "n"
                   break
                elif userInput == "no":
-                  loggerProcess.stdin.write("DECRYPT_EXIT User exit out of entering a decryption\n")
+                  loggerProcess.stdin.write("DECRYPT_EXIT User exit out of history for entering a decryption\n")
                   loggerProcess.stdin.flush()
                   return
                else:
+                  loggerProcess.stdin.write("ERROR User gave invalid input\n")     
+                  loggerProcess.stdin.flush()
                   print("Invalid input")
          else:
             displayHistory(history)
             print("Enter a number for the word you would like to decrypt (If you would like to enter a new line, enter n): ")
+            print("Input Number: ", end="")
             decryptNum = input().strip().lower()
 
             if decryptNum.isdigit():
                index = int(decryptNum)
                if 1 <= index <= len(history):
-                  index *= -index
+                  print(len(history))
+                  index = -index
                   word = history[index]
-                  loggerProcess.stdin.write("HISTORY_DECRYPT User chose to encrypt word in history\n")
+                  loggerProcess.stdin.write(f"HISTORY_DECRYPT User chose to decrypt {word} in history\n")
                   loggerProcess.stdin.flush()
-                  #put encryption functions
-                  #store ouptut of encryption process
-                  # put logger output write
+
+                  encryptionProcess.stdin.write(f"DECRYPT {word}\n")
+                  encryptionProcess.stdin.flush()
+
+                  output = encryptionProcess.stdout.readline().strip()
+                  print(output)
+
+                  parser = output.split()
+                  code = parser[0].upper()
+                  
+                  
+                  if code != "ERROR":
+                     history.append(word)
+                     history.append(parser[1]) 
+
+                  loggerProcess.stdin.write(f"{output}\n")
+                  loggerProcess.stdin.flush()
                   return
                else:
+                  loggerProcess.stdin.write("ERROR User chose a number out of range for history\n")     
+                  loggerProcess.stdin.flush()
                   print("Number not in range")
                   userInput = "h"
             else:
                if userInput != "n":
-                  print("Invalid  Input")
+                  loggerProcess.stdin.write("ERROR User gave invalid input\n")     
+                  loggerProcess.stdin.flush()
+                  print("Invalid Input")
                else:
                   userInput = "n"
+
       if userInput == "n":
-         print("Enter new string that you would like to encrypt:")
-         word = input().strip().lower()
-         if word.isalpha():
+         print("Enter new string that you would like to decrypt")
+         print("Input String: ", end="")
+         word = input().strip().upper()
+         
+         
+         loggerProcess.stdin.write("NEW_DECRYPT User chose to enter new string to decrypt\n")
+         loggerProcess.stdin.flush()
+
+         encryptionProcess.stdin.write(f"DECRYPT {word}\n")
+         encryptionProcess.stdin.flush()
+
+         output = encryptionProcess.stdout.readline().strip()
+         print(output)
+         parser = output.split()
+         code = parser[0].upper()
+         
+         #need logic here to make sure only valid words and results are added to the history
+         if code != "ERROR":
             history.append(word)
-            loggerProcess.stdin.write("NEW_DECRYPT User chose to enter new string to decrypt\n")
-            loggerProcess.stdin.flush()
-            #put appropriate functions
-            return
-         else:
-            print("Invalid String. Should only contain characters.")
+            history.append(parser[-1])
+
+         loggerProcess.stdin.write(f"{output}\n")
+         loggerProcess.stdin.flush()
+         
+         return
+      
          
 
 
 
 def main():
-  ##Error handling for log file if it is not put in with the arguments when running python [arguments]
-  if len(sys.argv) != 2:
-    print("Run: python driver.py <logFileName>")
-    sys.exit(1) #return error code
-  
-  #fetch the log file name to pass into logger process
-  logFile = sys.argv[1]
+   ##Error handling for log file if it is not put in with the arguments when running python [arguments]
+   if len(sys.argv) != 2:
+      print("Run: python driver.py <logFileName>")
+      sys.exit(1) #return error code
 
-  #initalize a new history for the run using an array 
-  history = [] #I think I will treat it as a stack to append the new words 
+   #fetch the log file name to pass into logger process
+   logFile = sys.argv[1]
 
-  #run the process "python logger.py <logFIleName>"
-  #Setup a loggerProcess.stdin to send in input from the driver
-  #I could possibly explore connect stdin to the output of the encryption process but will not worry about that for now 
-  loggerProcess = Popen(['python', 'logger.py', logFile], stdin = PIPE, text = True )
+   #initalize a new history for the run using an array 
+   history = [] #I think I will treat it as a stack to append the new words 
 
-  #run process "python encrypytion.py"
-  #Setup stdin and stdout pipes to get info
-  encryptionProcess = Popen(['python', 'encryption.py'], stdin = PIPE, stdout = PIPE, text = True)
+   #run the process "python logger.py <logFIleName>"
+   #Setup a loggerProcess.stdin to send in input from the driver
+   #I could possibly explore connect stdin to the output of the encryption process but will not worry about that for now 
+   loggerProcess = Popen(['python', 'logger.py', logFile], stdin = PIPE, text = True )
 
-  ###############  UI SETUP      #############
+   #run process "python encrypytion.py"
+   #Setup stdin and stdout pipes to get info
+   encryptionProcess = Popen(['python', 'encryption.py'], stdin = PIPE, stdout = PIPE, text = True)
 
-  while True:
-    
-    print("\nWELCOME TO ENCRYPTION PROGRAM: TYPE AN ACTION\n")
-    print("1. password")
-    print("2. encrypt")
-    print("3. decrypt")
-    print("4. history")
-    print("5. quit\n")
-    print("Action: ", end="")
-    userInput = input().strip().lower() #remove the trailing and leading whitespace with strip
-    
-    if userInput == "password": #handle set password
-       password(loggerProcess, encryptionProcess, history)
-    elif userInput == "encrypt": #handle encryption
-       encrypt(loggerProcess, encryptionProcess, history)
+   ###############  UI SETUP      #############
 
-    elif userInput == "decrypt": #handle decryption
-       decrypt(loggerProcess, encryptionProcess, history)
+   while True:
+      print("\nWELCOME TO ENCRYPTION PROGRAM: TYPE AN ACTION\n")
+      print("1. password")
+      print("2. encrypt")
+      print("3. decrypt")
+      print("4. history")
+      print("5. quit\n")
+      print("Action: ", end="")
+      userInput = input().strip().lower() #remove the trailing and leading whitespace with strip
 
-    elif userInput == "history": #handle history
-       displayHistory(history)
-       loggerProcess.stdin.write("HISTORY_SELECTED User selected history function\n")
-       loggerProcess.stdin.flush()
+      if (userInput == "password" or userInput == "1"): #handle set password
+         password(loggerProcess, encryptionProcess, history)
+      elif (userInput == "encrypt" or userInput == "2"): #handle encryption
+         encrypt(loggerProcess, encryptionProcess, history)
 
-    elif userInput == "quit": #handle quit action
-       loggerProcess.stdin.write("QUIT\n")
-       loggerProcess.stdin.flush()
-       break
-    else:
-       print("Invalid command entered.")
+      elif (userInput == "decrypt" or userInput == "3"): #handle decryption
+         decrypt(loggerProcess, encryptionProcess, history)
 
-    
-       
-  loggerProcess.terminate() #terminate the processes
-  encryptionProcess.terminate()
-  print("Broke out of loop")
+      elif (userInput == "history" or userInput == '4'): #handle history
+         displayHistory(history)
+         loggerProcess.stdin.write("HISTORY_SELECTED User selected history function\n")
+         loggerProcess.stdin.flush()
+
+      elif (userInput == "quit" or userInput == "5"): #handle quit action
+         encryptionProcess.stdin.write("QUIT\n")
+         encryptionProcess.stdin.flush()
+         output = encryptionProcess.stdout.readline().strip()
+         print(output)
+         loggerProcess.stdin.write("QUIT\n")
+         loggerProcess.stdin.flush()
+         break
+      else:
+         loggerProcess.stdin.write("ERROR User gave invalid command\n")     
+         loggerProcess.stdin.flush()
+         print("Invalid command entered.")
+
+
+   encryptionProcess.terminate()
+   loggerProcess.terminate()
+      
+
 
     
 
