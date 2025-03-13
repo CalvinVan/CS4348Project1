@@ -139,13 +139,13 @@ Driver:
   a. Password
   b. Encrypt
   c. Decrypt
-  d. History
+  d. History DONE
   e. Quit
 
-Logger:
-1. Setup Initial Start Log
-2. Setup timing in log
-3. Setup writing messages in the log
+Logger: DONE?
+1. Setup Initial Start Log DONE
+2. Setup timing in log DONE
+3. Setup writing messages in the log DONE
 
 Encryption
 1. Setup functions and their outputs
@@ -156,3 +156,4 @@ Encryption
 
 ## March 12 3:30 PM
 Work on logger.
+Work on Driver menu
