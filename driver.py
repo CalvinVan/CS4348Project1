@@ -6,10 +6,14 @@ def password(loggerProcess, encryptionProcess, history):
    loggerProcess.stdin.write("PASSWORD_SELECTED User selected set password option\n")
    loggerProcess.stdin.flush()
    while True:
-      print("Use history (h) or enter new string (n) to set as password (Enter h or n)")
+      print("Use history (h) or enter new string (n) to set as password (Enter h or n or cancel)")
       print("Select: ", end="")
       userInput = input().strip().lower()
-      if (userInput != "h" and userInput != "n"):
+      if userInput == "cancel":
+         loggerProcess.stdin.write("CANCEL User cancelled action")
+         loggerProcess.stdin.flush()
+         return
+      elif (userInput != "h" and userInput != "n"):
          print("Invalid Input")
       else:
          break
@@ -42,13 +46,23 @@ def password(loggerProcess, encryptionProcess, history):
                   word = history[index]
                   loggerProcess.stdin.write("HISTORY_PASSWORD User chose to use word in history to set as password\n")     
                   loggerProcess.stdin.flush()
+                  
+                  encryptionProcess.stdin.write(f"PASSKEY {word}\n")
+                  encryptionProcess.stdin.flush()
+                  
+                  #pull output from encryption process and store it
+                  output = encryptionProcess.stdout.readline().strip()
+                  #requirements state to print the output from driver
+                  print(output)
+
+                  #write the output to logger
+                  loggerProcess.stdin.write(output)
+                  loggerProcess.stdin.flush()
                   return       
-                  #put encryption password function here
-
-                  #store output of encryption process to message to pass into logger
-
-                  #put logger output write
+                  
                else:
+                  loggerProcess.stdin.write("ERROR User chose a number out of range for history\n")     
+                  loggerProcess.stdin.flush()
                   print("Number not in range")
                   userInput ="h"
 
@@ -64,17 +78,23 @@ def password(loggerProcess, encryptionProcess, history):
          while True:
             print("Enter new string that you would like to set as a password:")
             word = input().strip().lower()
-            if word.isalpha():
-               loggerProcess.stdin.write("NEW_PASSWORD User chose to enter a new word to set as password\n")
-               loggerProcess.stdin.flush() 
-               return
-               #put encryption password function here
+           
+            loggerProcess.stdin.write("NEW_PASSWORD User chose to enter a new word to set as password\n")
+            loggerProcess.stdin.flush() 
 
-               #store output of encryption process to message to pass into logger
+            encryptionProcess.stdin.write(f"PASSKEY {word}\n")
+            encryptionProcess.stdin.flush()
+            
+            
+            output = encryptionProcess.stdout.readline().strip()
+            
+            print(output)
 
-               #Put logger output write 
-            else:
-               print("Invalid String. Should only contain characters")
+
+            loggerProcess.stdin.write(output)
+            loggerProcess.stdin.flush()
+            return
+    
             
 
 def displayHistory(history):
@@ -93,10 +113,14 @@ def encrypt(loggerProcess, encryptionProcess, history):
    loggerProcess.stdin.write("ENCRYPT_SELECTED User selected encrypt option\n")
    loggerProcess.stdin.flush()
    while True:
-      print("Use history (h) or enter new string (n) to encrypt (Enter h or n)")
-      print("Select: ")
+      print("Use history (h) or enter new string (n) to encrypt (Enter h or n or cancel)")
+      print("Select: ", end="")
       userInput = input().strip().lower()
-      if (userInput != "h" and userInput != "n"):
+      if userInput == "cancel":
+         loggerProcess.stdin.write("CANCEL User cancelled action")
+         loggerProcess.stdin.flush()
+         return
+      elif (userInput != "h" and userInput != "n"):
          print("Invalid Input")
       else:
          break
@@ -145,23 +169,29 @@ def encrypt(loggerProcess, encryptionProcess, history):
          print("Enter new string that you would like to encrypt:")
          print("Select: ", end="")
          word = input().strip().lower()
-         if word.isalpha():
-            history.append(word)
-            loggerProcess.stdin.write("NEW_ENCRYPTION User chose to enter new string to encrypt\n")
-            loggerProcess.stdin.flush()
-            #put appropriate functions
-            return
-         else:
-            print("Invalid String. Should only contain characters.")
+        
+         history.append(word)
+         loggerProcess.stdin.write("NEW_ENCRYPTION User chose to enter new string to encrypt\n")
+         loggerProcess.stdin.flush()
+
+         encryptionProcess.stdin.write("ENCRYPT {}")
+
+         #put appropriate functions
+         return
+
 
 def decrypt(loggerProcess, encryptionProcess, history):
    loggerProcess.stdin.write("DECRYPT_SELECTED User selected decrypt option\n")
    loggerProcess.stdin.flush()
    while True:
-      print("Use history (h) or enter new string (n) to decrypt (Enter h or n)")
+      print("Use history (h) or enter new string (n) to decrypt (Enter h or n or cancel) ")
       print("Select: ", end="")
       userInput = input().strip().lower()
-      if (userInput != "h" and userInput != "n"):
+      if userInput == "cancel":
+         loggerProcess.stdin.write("CANCEL User cancelled action")
+         loggerProcess.stdin.flush()
+         return
+      elif (userInput != "h" and userInput != "n"):
          print("Invalid Input")
       else:
          break
@@ -272,6 +302,10 @@ def main():
        loggerProcess.stdin.write("QUIT\n")
        loggerProcess.stdin.flush()
        break
+    else:
+       print("Invalid command entered.")
+
+    
        
   loggerProcess.terminate() #terminate the processes
   encryptionProcess.terminate()

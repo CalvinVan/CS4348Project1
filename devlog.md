@@ -134,7 +134,7 @@ Setup TO-DO-LIST for all files
 Driver:
 1. Setup getting logger file (DONE)
 2. Setup running the 2 processes (DONE)
-3. Setup UI 
+3. Setup UI DONE 
 4. Setup Functions and the proper communication with the 2 processes
   a. Password
   b. Encrypt
@@ -157,3 +157,8 @@ Encryption
 ## March 12 3:30 PM
 Work on logger.
 Work on Driver menu
+Finished up setting up the functions without implementing the encryption backend connection
+
+## March 12 8:00 PM
+Start working on encryption program
+An error that I came across was not having an endline when writing into the encryption program could lead to it being stuck since I had it read in a line.
